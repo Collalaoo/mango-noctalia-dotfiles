@@ -17,18 +17,29 @@ Minimal dotfiles for **[MangoWM](https://github.com/mangowm/mangowm)** with the 
 
 ## Installation
 
-### Quick (Arch Linux + paru)
+One script handles all distros — it detects your package manager and installs
+MangoWM + Noctalia (building from source when no package is available).
 
 ```sh
 bash <(curl -fsSL https://raw.githubusercontent.com/Collalaoo/mango-noctalia-dotfiles/main/bootstrap.sh)
 ```
 
-### Manual
+Supported: Arch, Fedora, openSUSE, Ubuntu/Debian, Void, Gentoo, NixOS¹.
+
+¹ NixOS prints the config snippet instead (declarative flakes).
+
+### Manual (any distro)
 
 ```sh
 git clone https://github.com/Collalaoo/mango-noctalia-dotfiles.git ~/.dotfiles
 ln -sf ~/.dotfiles/mango ~/.config/mango
 ln -sf ~/.dotfiles/noctalia ~/.config/noctalia
+```
+
+### Config only (if MangoWM + Noctalia are already installed)
+
+```sh
+bash <(curl -fsSL https://raw.githubusercontent.com/Collalaoo/mango-noctalia-dotfiles/main/bootstrap.sh) --config-only
 ```
 
 ## Keybinds

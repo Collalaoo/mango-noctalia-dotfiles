@@ -17,18 +17,29 @@
 
 ## Установка
 
-### Быстро (Arch Linux + paru)
+Один скрипт підтримує всі дистрибутиви — визначає ваш пакетний менеджер
+і встановлює MangoWM + Noctalia (збирає з вихідників, якщо пакета немає).
 
 ```sh
 bash <(curl -fsSL https://raw.githubusercontent.com/Collalaoo/mango-noctalia-dotfiles/main/bootstrap.sh)
 ```
 
-### Вручную
+Підтримується: Arch, Fedora, openSUSE, Ubuntu/Debian, Void, Gentoo, NixOS¹.
+
+¹ Для NixOS скрипт виводить інструкцію для додавання в configuration.nix.
+
+### Вручну (будь-який дистрибутив)
 
 ```sh
 git clone https://github.com/Collalaoo/mango-noctalia-dotfiles.git ~/.dotfiles
 ln -sf ~/.dotfiles/mango ~/.config/mango
 ln -sf ~/.dotfiles/noctalia ~/.config/noctalia
+```
+
+### Тільки конфіги (якщо MangoWM + Noctalia вже встановлені)
+
+```sh
+bash <(curl -fsSL https://raw.githubusercontent.com/Collalaoo/mango-noctalia-dotfiles/main/bootstrap.sh) --config-only
 ```
 
 ## Хоткеи
