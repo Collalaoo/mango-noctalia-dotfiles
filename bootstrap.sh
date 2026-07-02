@@ -66,10 +66,18 @@ arch() {
   elif command -v yay &>/dev/null; then
     yay -S --needed --noconfirm mangowm-git noctalia
   else
-    echo "Installing paru first…"
+    echo "Select AUR helper:"
+    echo "  1) paru-bin  (pre-compiled, recommended)"
+    echo "  2) paru      (builds from source)"
+    read -rp "Choice [1/2]: " aur_choice
+    case "${aur_choice:-1}" in
+      2) url="https://aur.archlinux.org/paru.git" ;;
+      *) url="https://aur.archlinux.org/paru-bin.git" ;;
+    esac
     sudo pacman -S --needed --noconfirm base-devel git
-    git clone https://aur.archlinux.org/paru.git /tmp/paru
-    (cd /tmp/paru && makepkg -si --noconfirm)
+    git clone "$url" /tmp/paru-setup
+    (cd /tmp/paru-setup && makepkg -si --noconfirm)
+    rm -rf /tmp/paru-setup
     paru -S --needed --noconfirm mangowm-git noctalia
   fi
 }
