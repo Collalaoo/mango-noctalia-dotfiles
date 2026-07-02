@@ -1,0 +1,25 @@
+id = "me/mango-keybinds"
+name = "Mango Keybinds"
+version = "1.0.0"
+min_noctalia = "5.0.0"
+author = "me"
+license = "MIT"
+tags = ["mango", "keybinds", "help"]
+icon = "keyboard"
+description = "Shows all MangoWM keybinds grouped by category with search."
+
+[[widget]]
+id = "opener"
+entry = "widget.luau"
+
+[[panel]]
+id = "browser"
+entry = "panel.luau"
+width = 520
+height = 500
+placement = "floating"
+position = "center"
+
+[[shortcut]]
+id = "shortcut"
+entry = "shortcut.luau"

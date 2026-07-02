@@ -57,6 +57,20 @@ All keybinds follow the original [hobbyist-dotfiles](https://github.com/BlackSpa
 
 ## Plugins
 
+### mango-keybinds
+
+Opens a searchable panel with every keybind grouped by category (Noctalia shell,
+applications, layouts, navigation, tags, windows, media, system…).
+
+```sh
+noctalia plugin add Collalaoo/mango-keybinds
+```
+
+Then add `"keybinds"` to `bar.main.end` in `noctalia/config.toml`:
+```toml
+end = ["media", "tray", "volume", "notifications", "keybinds", "session"]
+```
+
 ### mango-layouts
 
 Adds a layout switcher — bar widget, preview panel, and control center shortcut.

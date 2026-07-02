@@ -3,10 +3,14 @@
 # =============================================================================
 # Place in ~/.config/noctalia/config.toml
 #
-# Optional: install the mango-layouts plugin for a layout indicator widget:
-#   noctalia plugin add Collalaoo/mango-layouts
-# Then add "layout" to bar.main.start:
+# Optional plugins:
+#   noctalia plugin add Collalaoo/mango-layouts   — layout switcher (bar widget + panel)
+#   noctalia plugin add Collalaoo/mango-keybinds  — keybind browser (bar widget + panel)
+#
+# For mango-layouts, add "layout" to bar.main.start:
 #   start = ["launcher", "workspaces", "layout"]
+# For mango-keybinds, add "keybinds" to bar.main.end:
+#   end = ["media", "tray", "volume", "notifications", "keybinds", "session"]
 
 # ── Theme ────────────────────────────────────────────────────────────────────
 [theme]

@@ -57,6 +57,20 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Collalaoo/mango-noctalia-dot
 
 ## Плагины
 
+### mango-keybinds
+
+Відкриває панель з усіма хоткеями, згрупованими по категоріях (Noctalia shell,
+додатки, леяути, навігація, теги, вікна, медіа, система…).
+
+```sh
+noctalia plugin add Collalaoo/mango-keybinds
+```
+
+Додайте `"keybinds"` в `bar.main.end` у `noctalia/config.toml`:
+```toml
+end = ["media", "tray", "volume", "notifications", "keybinds", "session"]
+```
+
 ### mango-layouts
 
 Добавляет индикатор раскладки в бар:
