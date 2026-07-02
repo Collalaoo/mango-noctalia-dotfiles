@@ -40,7 +40,11 @@ deploy_configs() {
       noctalia)
         curl -fsSL "$BASE/$dir/config.toml" -o "$tmp/config.toml" 2>/dev/null || true ;;
     esac
-    rm -rf "$target" 2>/dev/null
+    if [ -d "$target" ]; then
+      local backup="${target}.bak.$(date +%s)"
+      echo "   Backing up $target → $backup"
+      mv "$target" "$backup"
+    fi
     mkdir -p "$(dirname "$target")"
     cp -r "$tmp" "$target"
     rm -rf "$tmp"
@@ -104,7 +108,7 @@ fedora() {
 
 # ── openSUSE ──────────────────────────────────────────────────────────────────
 opensuse() {
-  sudo zypper install -y foot brightnessctl playerctl wl-clippaste polkit-gnome kdeconnect
+  sudo zypper install -y foot brightnessctl playerctl wl-clipboard polkit-gnome kdeconnect
   # MangoWM / Noctalia: build from source (not in OBS yet)
   if ! command -v mangowm &>/dev/null; then
     echo "   Building MangoWM from source…"
@@ -172,17 +176,22 @@ void() {
 
 # ── Gentoo ────────────────────────────────────────────────────────────────────
 gentoo() {
-  sudo emerge --ask n foot brightnessctl playerctl wl-clipboard \
-    polkit-gnome kdeconnect
+  sudo emerge --noreplace --oneshot --quiet \
+    foot brightnessctl playerctl wl-clipboard polkit-gnome kdeconnect
   if ! command -v mangowm &>/dev/null; then
     echo "   Building MangoWM from source…"
-    sudo emerge --ask n cargo rust wayland libinput pixman libxkbcommon wayland-protocols
+    sudo emerge --noreplace --oneshot --quiet \
+      cargo rust wayland libinput pixman libxkbcommon wayland-protocols
     git clone https://github.com/mangowm/mangowm.git /tmp/mangowm
     (cd /tmp/mangowm && cargo build --release && sudo install -m755 target/release/mangowm /usr/local/bin/)
   fi
   if ! command -v noctalia &>/dev/null; then
     echo "   Building Noctalia from source…"
-    sudo emerge --ask n cargo rust pipewire systemd libxkbcommon wayland wayland-protocols dbus openssl
+    echo "   NOTE: if packages are masked, add to /etc/portage/package.accept_keywords:"
+    echo "     dev-libs/wayland ~amd64"
+    echo "     media-libs/mesa ~amd64"
+    sudo emerge --noreplace --oneshot --quiet \
+      cargo rust pipewire systemd libxkbcommon wayland wayland-protocols dbus openssl
     git clone https://github.com/noctalia-dev/shell.git /tmp/noctalia
     (cd /tmp/noctalia && cargo build --release && sudo install -m755 target/release/noctalia /usr/local/bin/)
   fi
