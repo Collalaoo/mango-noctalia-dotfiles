@@ -17,16 +17,16 @@
 
 ## Установка
 
-Один скрипт підтримує всі дистрибутиви — визначає ваш пакетний менеджер
-і встановлює MangoWM + Noctalia (збирає з вихідників, якщо пакета немає).
+Один скрипт поддерживает все дистрибутивы — определяет ваш пакетный менеджер
+и устанавливает MangoWM + Noctalia (собирает из исходников, если пакета нет).
 
 ```sh
 bash <(curl -fsSL https://raw.githubusercontent.com/Collalaoo/mango-noctalia-dotfiles/main/bootstrap.sh)
 ```
 
-Підтримується: Arch, Fedora, openSUSE, Ubuntu/Debian, Void, Gentoo, NixOS¹.
+Поддерживается: Arch, Fedora, openSUSE, Ubuntu/Debian, Void, Gentoo, NixOS¹.
 
-¹ Для NixOS скрипт виводить інструкцію для додавання в configuration.nix.
+¹ Для NixOS скрипт выводит инструкцию для добавления в configuration.nix.
 
 ### Вручну (будь-який дистрибутив)
 
@@ -59,14 +59,14 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Collalaoo/mango-noctalia-dot
 
 ### mango-keybinds
 
-Відкриває панель з усіма хоткеями, згрупованими по категоріях (Noctalia shell,
-додатки, леяути, навігація, теги, вікна, медіа, система…).
+Открывает панель со всеми хоткеями, сгруппированными по категориям (Noctalia shell,
+приложения, раскладки, навигация, теги, окна, медиа, система…).
 
 ```sh
 noctalia plugin add Collalaoo/mango-keybinds
 ```
 
-Додайте `"keybinds"` в `bar.main.end` у `noctalia/config.toml`:
+Добавьте `"keybinds"` в `bar.main.end` в `noctalia/config.toml`:
 ```toml
 end = ["media", "tray", "volume", "notifications", "keybinds", "session"]
 ```

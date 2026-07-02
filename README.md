@@ -81,33 +81,33 @@ noctalia plugin add Collalaoo/mango-layouts
 
 Then add `"layout"` to `bar.main.start` in `noctalia/config.toml`.
 
-#### Як це працює / How it works
+#### How it works
 
-Плагін складається з чотирьох компонентів, кожен у своєму `.luau`-файлі:
+The plugin has four components, each in its own `.luau` file:
 
-**`service.luau`** — фоновий сервіс. Запускається з Noctalia і постійно тримає зв'язок із MangoWM через `mmsg` IPC:
-- `mmsg -g -l` — отримує поточний леяут (один раз при старті)
-- `mmsg -w` — підписується на сповіщення про зміну леяуту (stream)
-- Отримане значення нормалізується (напр. `"1:T"` → `"tile"`, `"DW"` → `"dwindle"`) і публікується в `noctalia.state.set("layout", id)`
-- Якщо `mmsg` недоступний — встановлює `layout = "tile"` і не робить poll
+**`service.luau`** — background service. Connects to MangoWM via `mmsg` IPC:
+- `mmsg -g -l` — fetches current layout on start
+- `mmsg -w` — subscribes to layout change notifications (stream)
+- Normalizes the value (e.g. `"1:T"` → `"tile"`, `"DW"` → `"dwindle"`) and publishes via `noctalia.state.set("layout", id)`
+- If `mmsg` is unavailable — sets `layout = "tile"` without polling
 
-**`widget.luau`** — бар-віджет. Показує іконку + назву поточного леяуту. Стежить за `noctalia.state.watch("layout", ...)`. При кліку:
-- Якщо `cycle_on_click = true` — перемикає на наступний леяут по циклу (`CYCLE_ORDER`)
-- Якщо `false` — відкриває панель вибору
+**`widget.luau`** — bar widget. Shows icon + current layout name. Watches `noctalia.state.watch("layout", ...)`. On click:
+- If `cycle_on_click = true` — cycles to next layout
+- If `false` — opens the selection panel
 
-**`panel.luau`** — панель з візуальною сіткою всіх леяутів (3 колонки). Кожна картка:
-- Показує міні-прев'ю леяуту (ui.box з кольорами `primary_container`, `secondary_container`, `tertiary_container`)
-- Активний леяут має border + пульсуючу анімацію (opacity змінюється через `math.sin` щооновно)
-- Клік → `mmsg -s -l <id>` — миттєво змінює леяут
+**`panel.luau`** — panel with visual grid of all layouts (3 columns). Each card:
+- Shows a mini layout preview (colored boxes using `primary_container`, `secondary_container`, `tertiary_container`)
+- Active layout has a border + pulsing animation (opacity via `math.sin` every frame)
+- Click → `mmsg -s -l <id>` — switches layout instantly
 
-**`shortcut.luau`** — кнопка в Control Center. Показує назву поточного леяуту, при кліку відкриває ту саму панель.
+**`shortcut.luau`** — Control Center button. Shows current layout name, opens the same panel on click.
 
 **Data flow:**
 ```
 MangoWM ──mmsg IPC──→ service.luau ──state.set("layout")──→ widget.luau
                                                           ─→ panel.luau
                                                           ─→ shortcut.luau
-Клік по віджету ──→ mmsg -s -l <name> ──→ MangoWM ──→ mmsg -w callback ──→ всі .watch оновлюються
+Widget click ──→ mmsg -s -l <name> ──→ MangoWM ──→ mmsg -w callback ──→ all .watch updated
 ```
 
 ## Credits
