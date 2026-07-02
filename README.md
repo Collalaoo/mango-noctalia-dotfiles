@@ -17,11 +17,16 @@ Minimal dotfiles for **[MangoWM](https://github.com/mangowm/mangowm)** with the 
 
 ## Installation
 
-```sh
-# Clone the repo
-git clone https://github.com/Collalaoo/mango-noctalia-dotfiles.git ~/.dotfiles
+### Quick (Arch Linux + paru)
 
-# Symlink configs
+```sh
+bash <(curl -fsSL https://raw.githubusercontent.com/Collalaoo/mango-noctalia-dotfiles/main/bootstrap.sh)
+```
+
+### Manual
+
+```sh
+git clone https://github.com/Collalaoo/mango-noctalia-dotfiles.git ~/.dotfiles
 ln -sf ~/.dotfiles/mango ~/.config/mango
 ln -sf ~/.dotfiles/noctalia ~/.config/noctalia
 ```

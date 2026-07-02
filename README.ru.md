@@ -17,8 +17,16 @@
 
 ## Установка
 
+### Быстро (Arch Linux + paru)
+
 ```sh
-git clone https://github.com/YOUR_USERNAME/mango-noctalia-dotfiles.git ~/.dotfiles
+bash <(curl -fsSL https://raw.githubusercontent.com/Collalaoo/mango-noctalia-dotfiles/main/bootstrap.sh)
+```
+
+### Вручную
+
+```sh
+git clone https://github.com/Collalaoo/mango-noctalia-dotfiles.git ~/.dotfiles
 ln -sf ~/.dotfiles/mango ~/.config/mango
 ln -sf ~/.dotfiles/noctalia ~/.config/noctalia
 ```
