@@ -19,7 +19,7 @@ Minimal dotfiles for **[MangoWM](https://github.com/mangowm/mangowm)** with the 
 
 ```sh
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/mango-noctalia-dotfiles.git ~/.dotfiles
+git clone https://github.com/Collalaoo/mango-noctalia-dotfiles.git ~/.dotfiles
 
 # Symlink configs
 ln -sf ~/.dotfiles/mango ~/.config/mango
