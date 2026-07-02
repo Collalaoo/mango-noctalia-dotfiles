@@ -1,0 +1,168 @@
+# =============================================================================
+# Noctalia v5 Configuration — MangoWM Dotfiles
+# =============================================================================
+# Place in ~/.config/noctalia/config.toml
+#
+# Optional: install the mango-layouts plugin for a layout indicator widget:
+#   noctalia plugin add Collalaoo/mango-layouts
+# Then add "layout" to bar.main.start:
+#   start = ["launcher", "workspaces", "layout"]
+
+# ── Theme ────────────────────────────────────────────────────────────────────
+[theme]
+mode = "dark"
+palette_source = "wallpaper"
+
+# ── Shell (global) ───────────────────────────────────────────────────────────
+[shell]
+ui_scale                = 1.0
+corner_radius_scale     = 1.0
+font_family             = "sans-serif"
+offline_mode            = false
+clipboard_enabled       = true
+clipboard_auto_paste    = "auto"
+polkit_agent            = true
+screenshot.save_to_file      = true
+screenshot.directory         = ""
+screenshot.filename_pattern  = "screenshot_%Y%m%d_%H%M%S"
+screenshot.copy_to_clipboard = false
+
+[shell.animation]
+enabled = true
+speed   = 1.0
+
+[shell.shadow]
+direction = "down"
+alpha     = 0.55
+
+[shell.panel]
+transparency_mode = "soft"
+borders           = true
+shadow            = true
+launcher_placement    = "centered"
+clipboard_placement   = "centered"
+control_center_placement = "attached"
+session_placement     = "attached"
+
+# ── OSD ──────────────────────────────────────────────────────────────────────
+[osd]
+position          = "top_center"
+orientation       = "horizontal"
+scale             = 1.0
+background_opacity = 0.95
+offset_x          = 20
+offset_y          = 8
+
+[osd.kinds]
+volume      = true
+brightness  = true
+lock_keys   = true
+dnd         = true
+caffeine    = true
+
+# ── Lock Screen ──────────────────────────────────────────────────────────────
+[lockscreen]
+enabled          = true
+blurred_desktop  = true
+blur_intensity   = 0.5
+tint_intensity   = 0.3
+fingerprint      = true
+
+# ── Idle ─────────────────────────────────────────────────────────────────────
+[idle]
+lock_after     = 300
+suspend_after  = 600
+
+# ── Notifications ────────────────────────────────────────────────────────────
+[notification]
+position      = "top_right"
+max_visible   = 5
+timeout       = 5000
+
+# ── Audio ────────────────────────────────────────────────────────────────────
+[audio]
+enable_overdrive = true
+
+# ── Brightness ───────────────────────────────────────────────────────────────
+[brightness]
+backend = "brightnessctl"
+
+# ── Bar ──────────────────────────────────────────────────────────────────────
+[bar]
+order = ["main"]
+
+[bar.main]
+position           = "top"
+enabled            = true
+auto_hide          = false
+reserve_space      = true
+thickness          = 36
+background_opacity = 0.92
+shadow             = true
+radius             = 0
+margin_edge        = 0
+padding            = 12
+widget_spacing     = 4
+scale              = 1.0
+font_weight        = "regular"
+
+# Capsule defaults (pill-shaped widget backgrounds)
+capsule            = true
+capsule_fill       = "surface_variant"
+capsule_thickness  = 0.76
+capsule_radius     = 8.0
+capsule_opacity    = 0.85
+
+# Widget layout: left / center / right
+start  = ["launcher", "workspaces"]
+center = ["clock"]
+end    = ["media", "tray", "volume", "notifications", "session"]
+
+# ── Widgets ──────────────────────────────────────────────────────────────────
+
+[widget.launcher]
+glyph = "search"
+
+[widget.workspaces]
+display                 = "id"
+minimal                 = false
+max_label_chars         = 1
+labels_only_when_occupied = true
+active_pill_size        = 2.2
+inactive_pill_size      = 1.0
+focused_color           = "primary"
+occupied_color          = "secondary"
+empty_color             = "surface_variant"
+
+[widget.clock]
+format = "{:%H:%M}"
+
+[widget.media]
+album_art_only     = true
+art_size           = 18
+hide_when_no_media = true
+
+[widget.volume]
+device     = "output"
+show_label = false
+scroll_step = 5
+
+[widget.notifications]
+hide_when_no_unread = true
+
+[widget.session]
+glyph = "shutdown"
+
+[widget.tray]
+drawer = true
+drawer_columns = 3
+
+# ── Session Panel ────────────────────────────────────────────────────────────
+[shell.session]
+actions = [
+  { action = "lock",                enabled = true, label = "Lock" },
+  { action = "logout",              enabled = true, label = "Log Out" },
+  { action = "lock_and_suspend",    enabled = true, label = "Lock & Suspend" },
+  { action = "reboot",              enabled = true, label = "Reboot" },
+  { action = "shutdown",            enabled = true, label = "Shut Down", variant = "destructive" },
+]
