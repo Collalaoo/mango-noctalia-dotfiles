@@ -67,6 +67,27 @@ noctalia plugin add Collalaoo/mango-layouts
 
 Затем добавьте `"layout"` в `bar.main.start` в `noctalia/config.toml`.
 
+#### Как это работает
+
+Плагин состоит из четырех компонентов:
+
+**`service.luau`** — фоновый сервис. Общается с MangoWM через `mmsg` IPC:
+- `mmsg -g -l` — получает текущий layout при старте
+- `mmsg -w` — подписывается на уведомления об изменении layout
+- Нормализует значение (напр. `"1:T"` → `"tile"`) и публикует в `noctalia.state.set("layout", id)`
+
+**`widget.luau`** — бар-виджет. Показывает иконку + название. При клике переключает на следующий layout по циклу, либо открывает панель выбора.
+
+**`panel.luau`** — панель с сеткой превью всех layout'ов (3 колонки). Активный layout подсвечен и пульсирует. Клик → `mmsg -s -l <id>`.
+
+**`shortcut.luau`** — кнопка в Control Center, открывает ту же панель.
+
+**Data flow:**
+```
+MangoWM ──mmsg IPC──→ service.luau ──state.set("layout")──→ widget / panel / shortcut
+Клик ──→ mmsg -s -l <name> ──→ MangoWM ──→ mmsg -w callback ──→ все .watch обновляются
+```
+
 ## Благодарности
 
 Основано на [hobbyist-dotfiles](https://github.com/BlackSparkz/hobbyist-dotfiles) от BlackSparkz.

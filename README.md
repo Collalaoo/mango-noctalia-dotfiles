@@ -59,13 +59,42 @@ All keybinds follow the original [hobbyist-dotfiles](https://github.com/BlackSpa
 
 ### mango-layouts
 
-Adds a layout indicator widget to the bar:
+Adds a layout switcher — bar widget, preview panel, and control center shortcut.
 
 ```sh
 noctalia plugin add Collalaoo/mango-layouts
 ```
 
 Then add `"layout"` to `bar.main.start` in `noctalia/config.toml`.
+
+#### Як це працює / How it works
+
+Плагін складається з чотирьох компонентів, кожен у своєму `.luau`-файлі:
+
+**`service.luau`** — фоновий сервіс. Запускається з Noctalia і постійно тримає зв'язок із MangoWM через `mmsg` IPC:
+- `mmsg -g -l` — отримує поточний леяут (один раз при старті)
+- `mmsg -w` — підписується на сповіщення про зміну леяуту (stream)
+- Отримане значення нормалізується (напр. `"1:T"` → `"tile"`, `"DW"` → `"dwindle"`) і публікується в `noctalia.state.set("layout", id)`
+- Якщо `mmsg` недоступний — встановлює `layout = "tile"` і не робить poll
+
+**`widget.luau`** — бар-віджет. Показує іконку + назву поточного леяуту. Стежить за `noctalia.state.watch("layout", ...)`. При кліку:
+- Якщо `cycle_on_click = true` — перемикає на наступний леяут по циклу (`CYCLE_ORDER`)
+- Якщо `false` — відкриває панель вибору
+
+**`panel.luau`** — панель з візуальною сіткою всіх леяутів (3 колонки). Кожна картка:
+- Показує міні-прев'ю леяуту (ui.box з кольорами `primary_container`, `secondary_container`, `tertiary_container`)
+- Активний леяут має border + пульсуючу анімацію (opacity змінюється через `math.sin` щооновно)
+- Клік → `mmsg -s -l <id>` — миттєво змінює леяут
+
+**`shortcut.luau`** — кнопка в Control Center. Показує назву поточного леяуту, при кліку відкриває ту саму панель.
+
+**Data flow:**
+```
+MangoWM ──mmsg IPC──→ service.luau ──state.set("layout")──→ widget.luau
+                                                          ─→ panel.luau
+                                                          ─→ shortcut.luau
+Клік по віджету ──→ mmsg -s -l <name> ──→ MangoWM ──→ mmsg -w callback ──→ всі .watch оновлюються
+```
 
 ## Credits
 
