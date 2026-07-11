@@ -215,38 +215,4 @@ function onOpen(_context)
   render()
 end
 
-local function render()
-  local sections = {}
-  for _, group in ipairs(KEYBINDS) do
-    table.insert(sections, ui.row({ gap = 6, align = "center",
-                                    padding = { top = 8, bottom = 2 } }, {
-      ui.glyph({ name = group.icon, size = 14, color = "primary" }),
-      ui.label({ text = group.title, fontSize = 14, fontWeight = "bold",
-                 color = "on_surface" }),
-    }))
-    for _, item in ipairs(group.items) do
-      table.insert(sections, itemRow(item))
-    end
-  end
 
-  panel.render(ui.column({ gap = 4, padding = 16, flexGrow = 1 }, {
-    ui.row({ align = "center", justify = "space_between", gap = 8 }, {
-      ui.row({ gap = 8, align = "center" }, {
-        ui.glyph({ name = "keyboard", size = 18, color = "primary" }),
-        ui.label({ text = "Keybinds", fontSize = 16, fontWeight = "bold",
-                   color = "on_surface" }),
-      }),
-      ui.button({ glyph = "close", onClick = "onClose" }),
-    }),
-    ui.separator({ thickness = 1, color = "outline_variant", spacing = 6 }),
-    ui.scroll({ flexGrow = 1, gap = 3 }, sections),
-  }))
-end
-
-function onClose()
-  panel.close()
-end
-
-function onOpen(_context)
-  render()
-end
