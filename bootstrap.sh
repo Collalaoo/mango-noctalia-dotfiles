@@ -68,6 +68,59 @@ install_plugins() {
   fi
 }
 
+# ── SDDM display manager ───────────────────────────────────────────────────────
+setup_sddm() {
+  local install_cmd="$1"
+  local pkg="$2"
+
+  echo "==> Setting up SDDM display manager…"
+
+  if command -v systemctl &>/dev/null; then
+    # Check for conflicting DMs
+    for dm in gdm lightdm lxdm ly; do
+      if systemctl is-enabled --quiet "$dm" 2>/dev/null; then
+        echo "   Detected active DM: $dm — disabling…"
+        sudo systemctl disable "$dm" 2>/dev/null || true
+      fi
+    done
+
+    # Already enabled?
+    if systemctl is-enabled --quiet sddm 2>/dev/null; then
+      echo "   SDDM already enabled — skipping."
+      return 0
+    fi
+  fi
+
+  # Install SDDM if missing
+  if ! command -v sddm &>/dev/null && ! [ -x /usr/sbin/sddm ]; then
+    echo "   Installing SDDM…"
+    eval "$install_cmd $pkg"
+  fi
+
+  # Enable
+  if command -v systemctl &>/dev/null; then
+    sudo systemctl enable sddm 2>/dev/null || true
+    echo "   SDDM enabled."
+  else
+    echo "   No systemd found — enable sddm manually."
+  fi
+
+  # MangoWM session file for SDDM
+  local session_dir="/usr/share/wayland-sessions"
+  if [ ! -f "$session_dir/mangowm.desktop" ]; then
+    echo "   Creating MangoWM session file…"
+    sudo mkdir -p "$session_dir"
+    sudo tee "$session_dir/mangowm.desktop" > /dev/null << 'EOF'
+[Desktop Entry]
+Name=MangoWM
+Comment=This session starts MangoWM
+Exec=mangowm
+Type=Application
+EOF
+    echo "   Session file created."
+  fi
+}
+
 # ── Arch Linux ────────────────────────────────────────────────────────────────
 arch() {
   sudo pacman -S --needed --noconfirm \
@@ -91,6 +144,7 @@ arch() {
     rm -rf /tmp/paru-setup
     paru -S --needed --noconfirm mangowm-git noctalia
   fi
+  setup_sddm "sudo pacman -S --noconfirm" "sddm"
 }
 
 # ── Fedora ────────────────────────────────────────────────────────────────────
@@ -111,6 +165,7 @@ fedora() {
     git clone https://github.com/noctalia-dev/shell.git /tmp/noctalia
     (cd /tmp/noctalia && cargo build --release && sudo install -m755 target/release/noctalia /usr/local/bin/)
   fi
+  setup_sddm "sudo dnf install -y" "sddm"
 }
 
 # ── openSUSE ──────────────────────────────────────────────────────────────────
@@ -132,6 +187,7 @@ opensuse() {
     git clone https://github.com/noctalia-dev/shell.git /tmp/noctalia
     (cd /tmp/noctalia && cargo build --release && sudo install -m755 target/release/noctalia /usr/local/bin/)
   fi
+  setup_sddm "sudo zypper install -y" "sddm"
 }
 
 # ── Ubuntu / Debian ───────────────────────────────────────────────────────────
@@ -158,6 +214,7 @@ ubuntu() {
     git clone https://github.com/noctalia-dev/shell.git /tmp/noctalia
     (cd /tmp/noctalia && cargo build --release && sudo install -m755 target/release/noctalia /usr/local/bin/)
   fi
+  setup_sddm "sudo apt install -y" "sddm"
 }
 
 # ── Void Linux ────────────────────────────────────────────────────────────────
@@ -179,6 +236,7 @@ void() {
     git clone https://github.com/noctalia-dev/shell.git /tmp/noctalia
     (cd /tmp/noctalia && cargo build --release && sudo install -m755 target/release/noctalia /usr/local/bin/)
   fi
+  setup_sddm "sudo xbps-install -y" "sddm"
 }
 
 # ── Gentoo ────────────────────────────────────────────────────────────────────
@@ -207,6 +265,7 @@ gentoo() {
     git clone https://github.com/noctalia-dev/shell.git /tmp/noctalia
     (cd /tmp/noctalia && cargo build --release && sudo install -m755 target/release/noctalia /usr/local/bin/)
   fi
+  setup_sddm "sudo emerge --noreplace --oneshot --quiet" "x11-misc/sddm"
 }
 
 # ── NixOS ─────────────────────────────────────────────────────────────────────
@@ -291,6 +350,8 @@ FLAKE_EOF
   echo "    programs.noctalia.recommendedServices.enable = true;"
   echo "    programs.noctalia.configPath = \"$dotfiles_dir/noctalia/config.toml\";"
   echo ""
+  echo "    services.displayManager.sddm.enable = true;"
+  echo ""
   echo "    environment.systemPackages = with pkgs; ["
   echo "      mangowm foot brightnessctl playerctl wl-clipboard polkit-gnome"
   echo "    ];"
@@ -331,12 +392,13 @@ nixos_instructions() {
   echo "       };"
   echo "     };"
   echo ""
-  echo "  2. Enable Noctalia in configuration.nix:"
+  echo "  2. Enable Noctalia + SDDM in configuration.nix:"
   echo ""
   echo "     { inputs, ... }: {"
   echo "       imports = [ inputs.noctalia.nixosModules.default ];"
   echo "       programs.noctalia.enable = true;"
   echo "       programs.noctalia.recommendedServices.enable = true;"
+  echo "       services.displayManager.sddm.enable = true;"
   echo "       environment.systemPackages = with pkgs; [ mangowm foot ];"
   echo "     }"
   echo ""
