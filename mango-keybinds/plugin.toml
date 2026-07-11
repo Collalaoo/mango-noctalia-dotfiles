@@ -1,8 +1,8 @@
-id = "me/mango-keybinds"
+id = "Collalaoo/mango-keybinds"
 name = "Mango Keybinds"
 version = "1.0.0"
 min_noctalia = "5.0.0"
-author = "me"
+author = "Collalaoo"
 license = "MIT"
 tags = ["mango", "keybinds", "help"]
 icon = "keyboard"

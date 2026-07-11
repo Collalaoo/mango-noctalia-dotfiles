@@ -5,9 +5,7 @@ barWidget.setGlyph("keyboard")
 barWidget.setTooltip("View keybinds")
 
 function onClick()
-  noctalia.togglePanel("me/mango-keybinds:browser")
+  noctalia.togglePanel("Collalaoo/mango-keybinds:browser")
 end
 
-function update()
-  noctalia.setUpdateInterval(0)
-end
+-- no dynamic update needed

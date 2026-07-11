@@ -34,7 +34,7 @@ local KEYBINDS = {
       { keys = "Super + X",         desc = "Music (cmus)" },
       { keys = "Super + Y",         desc = "Network (nmtui)" },
       { keys = "Super + Z",         desc = "LocalSend (toggle)" },
-      { keys = "Shift + Return",    desc = "AI chat (aichat)" },
+      { keys = "Super + Shift + A", desc = "AI chat (aichat)" },
       { keys = "Alt + W",           desc = "Browse wallpapers (yazi)" },
     },
   },
@@ -131,6 +131,14 @@ local KEYBINDS = {
   },
 }
 
+local searchQuery = ""
+local function matches(item, query)
+  if query == "" then return true end
+  local q = query:lower()
+  return item.desc:lower():find(q, 1, true) ~= nil
+      or item.keys:lower():find(q, 1, true) ~= nil
+end
+
 local function itemRow(item)
   return ui.row({ gap = 8, padding = { left = 8, right = 8, top = 6, bottom = 6 },
                   fill = "surface_container", radius = 8 }, {
@@ -142,6 +150,69 @@ local function itemRow(item)
       ui.label({ text = item.keys, fontSize = 11, fontWeight = "bold", color = "primary" }),
     }),
   })
+end
+
+local function render()
+  local sections = {}
+  for _, group in ipairs(KEYBINDS) do
+    local matched = {}
+    for _, item in ipairs(group.items) do
+      if matches(item, searchQuery) then
+        table.insert(matched, item)
+      end
+    end
+    if #matched > 0 or searchQuery == "" then
+      if searchQuery ~= "" then
+        -- skip group header when filtering, just show items
+      else
+        table.insert(sections, ui.row({ gap = 6, align = "center",
+                                        padding = { top = 8, bottom = 2 } }, {
+          ui.glyph({ name = group.icon, size = 14, color = "primary" }),
+          ui.label({ text = group.title, fontSize = 14, fontWeight = "bold",
+                     color = "on_surface" }),
+        }))
+      end
+    end
+    if #matched > 0 then
+      for _, item in ipairs(matched) do
+        table.insert(sections, itemRow(item))
+      end
+    end
+  end
+
+  if #sections == 0 then
+    table.insert(sections, ui.label({ text = "  No matching keybinds", fontSize = 13,
+                                      color = "on_surface_variant", padding = { top = 16 } }))
+  end
+
+  panel.render(ui.column({ gap = 4, padding = 16, flexGrow = 1 }, {
+    ui.row({ align = "center", justify = "space_between", gap = 8 }, {
+      ui.row({ gap = 8, align = "center" }, {
+        ui.glyph({ name = "keyboard", size = 18, color = "primary" }),
+        ui.label({ text = "Keybinds", fontSize = 16, fontWeight = "bold",
+                   color = "on_surface" }),
+      }),
+      ui.button({ glyph = "close", onClick = "onClose" }),
+    }),
+    ui.textbox({ id = "search", placeholder = "Search binds…", flexGrow = 1,
+                 onChanged = onSearch, fontSize = 13 }),
+    ui.separator({ thickness = 1, color = "outline_variant", spacing = 6 }),
+    ui.scroll({ flexGrow = 1, gap = 3 }, sections),
+  }))
+end
+
+function onSearch(text)
+  searchQuery = text
+  render()
+end
+
+function onClose()
+  panel.close()
+end
+
+function onOpen(_context)
+  searchQuery = ""
+  render()
 end
 
 local function render()

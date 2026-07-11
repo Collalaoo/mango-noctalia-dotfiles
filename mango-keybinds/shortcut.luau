@@ -7,5 +7,5 @@ shortcut.setActive(false)
 shortcut.setEnabled(true)
 
 function onClick()
-  noctalia.togglePanel("me/mango-keybinds:browser")
+  noctalia.togglePanel("Collalaoo/mango-keybinds:browser")
 end
